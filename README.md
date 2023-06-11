@@ -36,8 +36,7 @@ To use "FunctionTraits", simply add both "TypeTraits.h" and "CompilerVersions.h"
 
 Once you've #included "TypeTraits.h", there are two ways to use the "FunctionTraits" class. You can either use "FunctionTraits" directly like so (but with verbose syntax that technique 2 below eliminates):
 
-<div id="Technique1Of2"></div>
-### Technique 1 of 2 - Using "FunctionTraits" directly (not usually recommended)
+### Technique 1 of 2 - Using "FunctionTraits" directly (not usually recommended)<div id="Technique1Of2"></div>
 
 ``` C++
 // Only file you need to explicitly #include (see "Usage" section just above)
