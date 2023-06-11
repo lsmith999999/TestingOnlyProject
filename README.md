@@ -1,7 +1,7 @@
 # FunctionTraits
 ## C++ function traits library (single header-only) for retrieving info about any function (arg types, arg count, return type, etc.). Clean and easy-to-use, a "complete" implementation.
 
-[Whatever](Test)
+[Testing](Test)
 
 See [here](https://godbolt.org/z/a4G64jq6f) for a complete working example (demo for those who want to get right to the code - the same code in this repository).
 
