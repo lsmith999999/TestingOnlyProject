@@ -36,8 +36,8 @@ To use "FunctionTraits", simply add both "TypeTraits.h" and "CompilerVersions.h"
 
 Once you've #included "TypeTraits.h", there are two ways to use the "FunctionTraits" class. You can either use "FunctionTraits" directly like so (but with verbose syntax that technique 2 below eliminates):
 
-### Technique 1 of 2 - Using "FunctionTraits" directly (not usually recommended)
 <span id="Technique1Of2"></span>
+### Technique 1 of 2 - Using "FunctionTraits" directly (not usually recommended)
 
 ``` C++
 // Only file you need to explicitly #include (see "Usage" section just above)
@@ -158,8 +158,8 @@ constexpr auto F_Replace3rdArgWithChar_v = TypeName_v<F_Replace3rdArgWithChar_t>
 
 ```
 
-### Technique 2 of 2 - Using the helper templates instead of "FunctionTraits" directly (recommended)
 <span id="Technique2Of2"></span>
+### Technique 2 of 2 - Using the helper templates instead of "FunctionTraits" directly (recommended)
 
 Alternatively, instead of using "FunctionTraits" directly ([Technique 1 of 2](#Technique1Of2) above), you can rely on the second technique just below instead, which is normally much cleaner (and you should usually use it). As seen in the first technique above, relying on "FunctionTraits" directly can result in verbose syntax. For instance, due to the syntax of C++ itself, accessing the type of a given arg is ugly because you have to apply both the "typename" and "template" keywords (see example above). A helper template therefore exists not only for this, but for every member of "FunctionTraits". Therefore, instead of relying on "FunctionTraits" directly as seen in the above examples, you can rely on the helper templates instead. They're easier and cleaner, making the job of extracting a function's traits a breeze. 
 
@@ -252,8 +252,9 @@ constexpr auto F_Replace3rdArgWithChar_v = TypeName_v<F_Replace3rdArgWithChar_t>
 // Etc. (see "Helper templates" further below for the complete list)
 
 ```
-### Looping through all function arguments
 <span id="LoopingThroughAllFunctionArguments"></span>
+### Looping through all function arguments
+
 You can even loop through all arguments using the helper function template "ForEachArg()". The following example assumes C++20 or later for the lambda template seen below (lambda templates aren't available until C++20 or later), though if targeting C++17 you can easily replace it with your own functor instead (the "operator()" member in your functor needs to be a template however, with the same template args seen in the lambda below and the same code). For further details on "ForEachArg()", see its entry in the [Helper templates](#HelperTemplates) section just below.
 ``` C++
 // Only file you need to explicitly #include (see "Usage" section earlier)
@@ -326,8 +327,9 @@ const auto displayArgType = []<std::size_t I, typename ArgTypeT>()
 ForEachArg<F>(displayArgType);
 ```
 
-### Helper templates (complete, alphabetical list)
 <span id="HelperTemplates"></span>
+### Helper templates (complete, alphabetical list)
+
 The following provides a complete (alphabetical) list of all helper templates. Two separate tables exist, the first for read traits allowing you to read any part up a function's type, and the second write traits, allowing you to update any part of a function's type. Note that the first template arg of every template is the function you're targeting, whose name is always "F". Again, "F" supports the actual C++ function type, pointers and references to functions (note however that references to non-static member functions aren't supported by C++ itself), references to pointers to functions, and functors including lambdas - in all cases referring to their types, not actual instances). Note that a TRAITS_FUNCTION_C concept (declared in "TypeTraits.h") will kick in for illegal values of "F" in C++20 or later (all templates below refer to this), or a "static_assert" in C++17 otherwise (again, earlier versions aren't supported). For most of the traits, this is the only template arg. A small handful take additional template args which are described on a case-by-case basis in each table. Lastly, note that for brevity, both the "=" sign and "inline" keyword (the latter for variable templates only) are omitted in the "Name" column of each table (after each alias template and variable template seen in this column). The "=" sign is removed since the implementation isn't usually relevant for most users (you can inspect the actual declaration in "TypeTraits.h" if you wish to see it), and all variable templates are in fact declared "inline" (even though the keyword has been omitted for brevity below).
 
 Lastly, please note that each template below simply wraps the corresponding member of the "FunctionTraits" struct itself
