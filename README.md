@@ -34,7 +34,7 @@ To use "FunctionTraits", simply add both "TypeTraits.h" and "CompilerVersions.h"
 
 Once you've #included "TypeTraits.h", there are two ways to use the "FunctionTraits" class. You can either use "FunctionTraits" directly like so (but with verbose syntax that technique 2 below eliminates):
 
-<span id="Technique1Of2"></span>
+<div id="Technique1Of2"></div>
 
 ### Technique 1 of 2 - Using "FunctionTraits" directly (not usually recommended)
 
@@ -156,7 +156,8 @@ constexpr auto F_Replace3rdArgWithChar_v = TypeName_v<F_Replace3rdArgWithChar_t>
 // Etc. (see "Helper templates" further below for the complete list)
 
 ```
-<span id="Technique2Of2"></span>
+<div id="Technique2Of2"></div>
+
 ### Technique 2 of 2 - Using the helper templates instead of "FunctionTraits" directly (recommended)
 
 Alternatively, instead of using "FunctionTraits" directly ([Technique 1 of 2](#Technique1Of2) above), you can rely on the second technique just below instead, which is normally much cleaner (and you should usually use it). As seen in the first technique above, relying on "FunctionTraits" directly can result in verbose syntax. For instance, due to the syntax of C++ itself, accessing the type of a given arg is ugly because you have to apply both the "typename" and "template" keywords (see example above). A helper template therefore exists not only for this, but for every member of "FunctionTraits". Therefore, instead of relying on "FunctionTraits" directly as seen in the above examples, you can rely on the helper templates instead. They're easier and cleaner, making the job of extracting a function's traits a breeze. 
@@ -250,7 +251,8 @@ constexpr auto F_Replace3rdArgWithChar_v = TypeName_v<F_Replace3rdArgWithChar_t>
 // Etc. (see "Helper templates" further below for the complete list)
 
 ```
-<span id="LoopingThroughAllFunctionArguments"></span>
+<div id="LoopingThroughAllFunctionArguments"></div >
+
 ### Looping through all function arguments
 
 You can even loop through all arguments using the helper function template "ForEachArg()". The following example assumes C++20 or later for the lambda template seen below (lambda templates aren't available until C++20 or later), though if targeting C++17 you can easily replace it with your own functor instead (the "operator()" member in your functor needs to be a template however, with the same template args seen in the lambda below and the same code). For further details on "ForEachArg()", see its entry in the [Helper templates](#HelperTemplates) section just below.
@@ -324,7 +326,8 @@ const auto displayArgType = []<std::size_t I, typename ArgTypeT>()
 ////////////////////////////////////////////////
 ForEachArg<F>(displayArgType);
 ```
-<span id="HelperTemplates"></span>
+<div id="HelperTemplates"></div>
+
 ### Helper templates (complete, alphabetical list)
 
 The following provides a complete (alphabetical) list of all helper templates. Two separate tables exist, the first for read traits allowing you to read any part up a function's type, and the second write traits, allowing you to update any part of a function's type. Note that the first template arg of every template is the function you're targeting, whose name is always "F". Again, "F" supports the actual C++ function type, pointers and references to functions (note however that references to non-static member functions aren't supported by C++ itself), references to pointers to functions, and functors including lambdas - in all cases referring to their types, not actual instances). Note that a TRAITS_FUNCTION_C concept (declared in "TypeTraits.h") will kick in for illegal values of "F" in C++20 or later (all templates below refer to this), or a "static_assert" in C++17 otherwise (again, earlier versions aren't supported). For most of the traits, this is the only template arg. A small handful take additional template args which are described on a case-by-case basis in each table. Lastly, note that for brevity, both the "=" sign and "inline" keyword (the latter for variable templates only) are omitted in the "Name" column of each table (after each alias template and variable template seen in this column). The "=" sign is removed since the implementation isn't usually relevant for most users (you can inspect the actual declaration in "TypeTraits.h" if you wish to see it), and all variable templates are in fact declared "inline" (even though the keyword has been omitted for brevity below).
@@ -383,7 +386,8 @@ Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs
 `template <TRAITS_FUNCTION_C F,`<br/>`          std::size_t N,`<br/>`          typename NewArgT>`<br/>`using ReplaceNthArg_t;`|Type alias for "F" after replacing its (zero-based) "Nth" argument with the type you pass. Pass "N" via the 2nd template arg (e.g., the zero-based index of the arg you're targeting) and the type you wish to replace it with via the 3rd template arg. The resulting alias is therefore identical to "F" except its "Nth" argument is replaced by the 3rd template arg (so passing, say, zero-based "4" for the 2nd template arg and "int" for the 3rd template arg would replace the 3rd function argument with an "int"). If you need to replace multiple arguments then recursively call "ReplaceNthArg_t" again, passing the result as the 1st template arg to "ReplaceNthArg_t" as many times as you need to (each time specifying a new "N"). If you wish to replace all arguments at once then call "ReplaceArgs_t" or "ReplaceArgsTuple_t;" instead.<code/>
 `template <TRAITS_FUNCTION_C F,`<br/>`          typename NewReturnTypeT>`<br/>`using ReplaceReturnType_t;`| Type alias for "F" after replacing its return type with the 2nd template arg
 
-<span id="WhyChooseThisLibrary"></span>
+<div id="WhyChooseThisLibrary"></div>
+
 ### Why choose this library
 You can certainly choose another if you wish, at your own discretion and subject to the policy of your organization, including "boost::callable_traits" if you have more confidence in relying on "boost" (or the one or two other full-blown solutions I've ever seen). TBH however, I've reviewed some of other function traits libraries out there and all are wanting in some way. For instance, I've reviewed the code for "boost:callable_traits" itself and with all due respect to the author, who's clearly an experienced C++ developer (you need to be to write a library like this), his implementation is needlessly large and complicated IMHO (with a bloated number of files). By comparision, "FunctionTraits" effectively provides the same functionality (just about everything and even more in some cases including calling convention support), and does so using a single file only (and a fraction of the code size). Well, two files are used actually but one is just a minor support file mainly used to identify the target C++ compiler - users only need to explicitly #include one file only in their code however). To be fair, the few 2 or 3 libraries out there that provide a mostly "complete" implementation will normally handle the needs of most users. However, I believe "FunctionTraits" is the closest among all of them to being a "complete" solution in the true sense of the word (to the best of my knowledge at this writing and subject to the limitations of C++ itself, which all other libraries are subject to as well). Its interface is also extremely easy to use, sometimes easier and cleaner than some of the others I've seen, and the total amount of code (comments and trivial syntax excluded) is barely a 1000 lines. Using the same line counting technique, "boost:callable_traits" is almost 3800 lines among the actual ".cpp" and ".hpp" files making up its primary "include" directory. To be fair, this is partly because "boost:callable_traits" manually declares all specializations required to detect every function that needs to be targeted,. "FunctionTraits" relies on macros to automate the process instead, creating the same specializations and actually more since it also supports calling conventions (but using much less actual written code to stitch all the specializations together). Calling conventions are only unofficially supported by "boost:callable_traits" and only weakly so, and not enabled by default (and while simple to activate, there are no official instructions at this writing without reading the code itself). The author even acknowledges it's "likely broken" in the comments (and "too much work to maintain"), because it deals with undocumented features. This is certainly true especially since calling conventions aren't document in the C++ standard itself (so a library compliant with all compilers isn't possible). However, the mainstream compilers can be targeted and reliably so in most real-world situations. "FunctionTraits" does so and the actual written code is still significantly shorter than "boost::callable_traits" while also supporting some additional features as well.
 
