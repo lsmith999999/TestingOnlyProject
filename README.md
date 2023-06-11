@@ -20,23 +20,24 @@ See [here](https://godbolt.org/z/a4G64jq6f) for a complete working example (demo
 
 The above covers almost all traits most programmers will ever be interested in. Other possible traits such as whether a function is a static member function, whether a non-static member function is virtual (and/or the "override" keyword is in effect), etc., are not available in this release, normally due to limitations in the language itself (either impossible or difficult/unwieldy to implement in current releases of C++). They may be available in a future version however if C++ better supports it.
 
-Note that this implementation is well researched and very easy to use. It supports all mainstream function types you'll likely ever want to work with normally. This includes the following (just pass one of these types as the "F" template parameter of "FunctionTraits" or any of its [Helper templates (complete, alphabetical list)](#HelperTemplates) - details to follow):
+Note that this implementation is well researched and very easy to use. It supports all mainstream function types you'll likely ever want to work with normally. This includes the following (just pass one of these types as the "F" template parameter of "FunctionTraits" or any of its [Helper templates](#HelperTemplates) - details to follow):
 
 1. Free functions which for our purposes also includes static member functions (in either case referring to the function's actual C++ type - pointers and references to free functions are also supported via 2 and 3 below)
 2. Pointers and references to free functions
 3. References to pointers to free functions
 4. Pointers to non-static member functions
 5. References to pointers to non-static member functions (note that C++ doesn't support references to non-static member functions, only pointers)
-6. Non-overloaded functors (i.e., functors with a single "operator()" member only, otherwise which overload to target becomes ambiguous - if present then you'll need to target the specific overload you're interested in using 4 or 5 above instead). Includes lambdas as well (just syntactic sugar for creating functors on-the-fly). Simply apply "decltype" to your lambda to retrieve its compiler-generated class type, which you can then pass to "FunctionTraits" or any of its [Helper templates (complete, alphabetical list)](#HelperTemplates). Please note however that generic lambdas are _not_ supported using this technique for technical reasons beyond the scope of this documentation. They can still be accessed via 4 and 5 above however as described in "TypeTraits.h" (though using unconventional syntax). Search this file for "_Example 3 (generic lambda)_" (quotes not included), which you'll find in the comments preceding the "FunctionTraits" specialization for functors (the comments for this example also provides additional technical details on this issue).
+6. Non-overloaded functors (i.e., functors with a single "operator()" member only, otherwise which overload to target becomes ambiguous - if present then you'll need to target the specific overload you're interested in using 4 or 5 above instead). Includes lambdas as well (just syntactic sugar for creating functors on-the-fly). Simply apply "decltype" to your lambda to retrieve its compiler-generated class type, which you can then pass to "FunctionTraits" or any of its [Helper templates](#HelperTemplates). Please note however that generic lambdas are _not_ supported using this technique for technical reasons beyond the scope of this documentation. They can still be accessed via 4 and 5 above however as described in "TypeTraits.h" (though using unconventional syntax). Search this file for "_Example 3 (generic lambda)_" (quotes not included), which you'll find in the comments preceding the "FunctionTraits" specialization for functors (the comments for this example also provides additional technical details on this issue).
 
 Note that the code also incorporates concepts when targeting C++20 or later or "static_assert" for C++17 (again, earlier versions aren't supported). In either case this will trap invalid function types with cleaner error messages at compile-time.
 
 ### Usage (GCC or compatible, Clang, Microsoft and Intel compilers only - C++17 and later)
-To use "FunctionTraits", simply add both "TypeTraits.h" and "CompilerVersions.h" to your code and then #include "TypeTraits.h" wherever you require it (all code is declared in namespace "StdExt"). Note that you need not explicitly #include "CompilerVersions.h" unless you wish to use it independently of "TypeTraits.h", since "TypeTraits.h" itself #includes it as a dependency ("CompilerVersions.h" simply declares various #defined constants used to identify the version of C++ you're using, and a few other compiler-related declarations - you're free to use these in your own code as well if you wish). The struct (template) "FunctionTraits" is then immediately available for use (see [Technique 1 of 2](#Technique1Of2) below), though you'll usually rely on its [Helper templates (complete, alphabetical list)](#HelperTemplates) instead (see [Technique 2 of 2](#Technique2Of2) below). Note that both files above have no platform-specific dependencies, except when targeting MSFT, where the native MSFT header <tchar.h> is expected to be in the usual #include search path (and it normally will be on MSFT platforms). Otherwise they rely on the C++ standard headers only which are therefore (also) expected to be in the usual search path on your platform.
+To use "FunctionTraits", simply add both "TypeTraits.h" and "CompilerVersions.h" to your code and then #include "TypeTraits.h" wherever you require it (all code is declared in namespace "StdExt"). Note that you need not explicitly #include "CompilerVersions.h" unless you wish to use it independently of "TypeTraits.h", since "TypeTraits.h" itself #includes it as a dependency ("CompilerVersions.h" simply declares various #defined constants used to identify the version of C++ you're using, and a few other compiler-related declarations - you're free to use these in your own code as well if you wish). The struct (template) "FunctionTraits" is then immediately available for use (see [Technique 1 of 2](#Technique1Of2) below), though you'll usually rely on its [Helper templates](#HelperTemplates) instead (see [Technique 2 of 2](#Technique2Of2) below). Note that both files above have no platform-specific dependencies, except when targeting MSFT, where the native MSFT header <tchar.h> is expected to be in the usual #include search path (and it normally will be on MSFT platforms). Otherwise they rely on the C++ standard headers only which are therefore (also) expected to be in the usual search path on your platform.
 
 Once you've #included "TypeTraits.h", there are two ways to use the "FunctionTraits" class. You can either use "FunctionTraits" directly like so (but with verbose syntax that technique 2 below eliminates):
 
-### Technique 1 of 2 - Using "FunctionTraits" directly (not usually recommended)<span id="Technique1Of2"></span>
+### Technique 1 of 2 - Using "FunctionTraits" directly (not usually recommended)
+<span id="Technique1Of2"></span>
 
 ``` C++
 // Only file you need to explicitly #include (see "Usage" section just above)
@@ -157,7 +158,8 @@ constexpr auto F_Replace3rdArgWithChar_v = TypeName_v<F_Replace3rdArgWithChar_t>
 
 ```
 
-### Technique 2 of 2 - Using the helper templates instead of "FunctionTraits" directly (recommended)<span id="Technique2Of2"></span>
+### Technique 2 of 2 - Using the helper templates instead of "FunctionTraits" directly (recommended)
+<span id="Technique2Of2"></span>
 
 Alternatively, instead of using "FunctionTraits" directly ([Technique 1 of 2](#Technique1Of2) above), you can rely on the second technique just below instead, which is normally much cleaner (and you should usually use it). As seen in the first technique above, relying on "FunctionTraits" directly can result in verbose syntax. For instance, due to the syntax of C++ itself, accessing the type of a given arg is ugly because you have to apply both the "typename" and "template" keywords (see example above). A helper template therefore exists not only for this, but for every member of "FunctionTraits". Therefore, instead of relying on "FunctionTraits" directly as seen in the above examples, you can rely on the helper templates instead. They're easier and cleaner, making the job of extracting a function's traits a breeze. 
 
@@ -250,7 +252,8 @@ constexpr auto F_Replace3rdArgWithChar_v = TypeName_v<F_Replace3rdArgWithChar_t>
 // Etc. (see "Helper templates" further below for the complete list)
 
 ```
-### Looping through all function arguments<span id="LoopingThroughAllFunctionArguments"></span>
+### Looping through all function arguments
+<span id="LoopingThroughAllFunctionArguments"></span>
 You can even loop through all arguments using the helper function template "ForEachArg()". The following example assumes C++20 or later for the lambda template seen below (lambda templates aren't available until C++20 or later), though if targeting C++17 you can easily replace it with your own functor instead (the "operator()" member in your functor needs to be a template however, with the same template args seen in the lambda below and the same code). For further details on "ForEachArg()", see its entry in the [Helper templates](#HelperTemplates) section just below.
 ``` C++
 // Only file you need to explicitly #include (see "Usage" section earlier)
