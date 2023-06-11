@@ -9,7 +9,7 @@ See [here](https://godbolt.org/z/a4G64jq6f) for a complete working example (demo
 
 1. `Return type` - Function's return type and/or its name as a WYSIWYG string (std::basic_string_view)
 2. `Argument count` - Number of (non-variadic) arguments in the function (formally called "arity")
-3. `Arguments` - The type of any (non-variadic) function argument (based on its zero-based index in the parameter list), and/or its name as a WYSIWYG string (std::basic_string_view). You can also obtain the "std::tuple" containing all arguments and iterate them using the "ForEachArg()" function template (though rarely required by most in practice - targeting specific function arguments by their index is far more common). See [Looping through all function arguments](LoopingThroughAllFunctionArguments) further below for details.
+3. `Arguments` - The type of any (non-variadic) function argument (based on its zero-based index in the parameter list), and/or its name as a WYSIWYG string (std::basic_string_view). You can also obtain the "std::tuple" containing all arguments and iterate them using the "ForEachArg()" function template (though rarely required by most in practice - targeting specific function arguments by their index is far more common). See [Looping through all function arguments](#LoopingThroughAllFunctionArguments) further below for details.
 4. `variadic` - Whether a function has variadic args (last arg is "...")
 5. `cv-qualifiers` - Whether a non-static member function is declared with the "const" and/or "volatile" cv-qualifiers
 6. `ref-qualifiers` - Whether a non-static member function is declared with the "&" or "&&" ref-qualifier
