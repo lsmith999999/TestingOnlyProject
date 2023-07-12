@@ -343,7 +343,7 @@ Finally, please note that each template below simply wraps the corresponding mem
 
 ### Read traits
   
-<span id="ArgCount_v"></span><details><summary><b>ArgCount_v</b></summary>
+> <span id="ArgCount_v"></span><details><summary><b>ArgCount_v</b></summary>
 >`template <TRAITS_FUNCTION_C F>`<br/>`constexpr std::size_t ArgCount_v;`<br/><br/>
 >"std::size_t" variable storing the number of arguments in "F" *not* including variadic arguments if any. Will be zero if function "F" has no (non-variadic) args. Note that this count is formally called "arity" but this variable is given a more user-friendly name.<br /><br /><ins>IMPORTANT</ins>:<br />Please note that if you wish to check if a function's argument list is completely empty, then inspecting this helper template for zero (0) is not sufficient, since it may return zero but still contain variadic args. To check for a completely empty argument list, call [IsEmptyArgList_v](#IsEmptyArgList_v) instead.</details>
 
