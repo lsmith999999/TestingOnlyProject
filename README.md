@@ -177,5 +177,3 @@
 <span id="ReplaceReturnType_t"></span><details><summary><b>ReplaceReturnType_t</b></summary>
 > `template <TRAITS_FUNCTION_C F,`<br/>`          typename NewReturnTypeT>`<br/>`using ReplaceReturnType_t;`<br/><br/>
 >Type alias for "F" after replacing its return type with "NewReturnTypeT</details>
-
-
