@@ -36,9 +36,8 @@ Note that the code also incorporates concepts when targeting C++20 or later or "
 
 Once you've #included "TypeTraits.h", there are two ways to use the "FunctionTraits" class. You can either use "FunctionTraits" directly like so (but with verbose syntax that [Technique 2 Of 2](#Technique2Of2) below eliminates):
 
-<a name="Technique1Of2"></a>
 ## Technique 1 of 2 - Using "FunctionTraits" directly (not usually recommended)
-
+<a name="Technique1Of2"></a>
 ```C++
 // Only file you need to explicitly #include (see "Usage" section just above)
 #include "TypeTraits.h"
@@ -658,7 +657,6 @@ using ReplaceReturnType_t;
 ```
 Type alias for "F" after replacing its return type with "NewReturnTypeT".
 </details>
-
 
 <a name="WhyChooseThisLibrary"></a>
 
