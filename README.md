@@ -329,7 +329,8 @@ const auto displayArgType = []<std::size_t I, typename ArgTypeT>()
 ////////////////////////////////////////////////
 ForEachArg<F>(displayArgType);
 ```
-<div id="HelperTemplates"></div>
+
+<a name="HelperTemplates"></a>
 
 ## Helper templates (complete, alphabetical list)
 
