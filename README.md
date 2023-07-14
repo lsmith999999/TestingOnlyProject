@@ -21,9 +21,7 @@ The above covers almost all traits most programmers will ever be interested in. 
 ## Usage (GCC or compatible, Clang, Microsoft and Intel compilers only - C++17 and later)
 To use "FunctionTraits", simply add both "TypeTraits.h" and "CompilerVersions.h" to your code and then #include "TypeTraits.h" wherever you require it (all code is declared in namespace "StdExt"). Note that you need not explicitly #include "CompilerVersions.h" unless you wish to use it independently of "TypeTraits.h", since "TypeTraits.h" itself #includes it as a dependency ("CompilerVersions.h" simply declares various #defined constants used to identify the version of C++ you're using, and a few other compiler-related declarations - you're free to use these in your own code as well if you wish). The struct (template) "FunctionTraits" is then immediately available for use (see [Technique 1 of 2](#Technique1Of2) below), though you'll normally rely on its [Helper templates](#HelperTemplates) instead (see [Technique 2 of 2](#Technique2Of2) below). Note that both files above have no platform-specific dependencies, except when targeting Microsoft, where the native Microsoft header <tchar.h> is expected to be in the usual #include search path (and it normally will be on Microsoft platforms). Otherwise they rely on the C++ standard headers only which are therefore (also) expected to be in the usual search path on your platform.
 
-<a name="SupportedTypesForF"></a>
-
-Note that template arg "F" is the first (and usually only) template arg of "FunctionTraits" and all its [Helper templates](#HelperTemplates), and refers to the function's type which can be any of the following:
+<a name="SupportedTypesForF"></a>Note that template arg "F" is the first (and usually only) template arg of "FunctionTraits" and all its [Helper templates](#HelperTemplates), and refers to the function's type which can be any of the following:
 
 1. Free functions which also includes static member functions, in either case referring to the function's actual C++ type (which are always considered to be free functions - non-static member functions are always handled by 4 or 5 below).
 2. Pointers and references to free functions
@@ -36,8 +34,8 @@ Note that the code also incorporates concepts when targeting C++20 or later or "
 
 Once you've #included "TypeTraits.h", there are two ways to use the "FunctionTraits" class. You can either use "FunctionTraits" directly like so (but with verbose syntax that [Technique 2 Of 2](#Technique2Of2) below eliminates):
 
-## Technique 1 of 2 - Using "FunctionTraits" directly (not usually recommended)
-<a name="Technique1Of2"></a>
+## <a name="Technique1Of2"></a>Technique 1 of 2 - Using "FunctionTraits" directly (not usually recommended)
+
 ```C++
 // Only file you need to explicitly #include (see "Usage" section just above)
 #include "TypeTraits.h"
@@ -156,9 +154,8 @@ constexpr auto SomeFuncReplace3rdArgWithChar_v = TypeName_v<SomeFuncReplace3rdAr
 // Etc. (see "Helper templates" further below for the complete list)
 
 ```
-<a name="Technique2Of2"></a>
 
-## Technique 2 of 2 - Using the helper templates instead of "FunctionTraits" directly (recommended)
+## <a name="Technique2Of2"></a>Technique 2 of 2 - Using the helper templates instead of "FunctionTraits" directly (recommended)
 
 Alternatively, instead of using "FunctionTraits" directly ([Technique 1 of 2](#Technique1Of2) above), you can rely on the second technique just below instead, which is normally much cleaner (and you should normally use it). As seen in the first technique above, relying on "FunctionTraits" directly can result in verbose syntax. For instance, due to the syntax of C++ itself, accessing the type of a given arg is ugly because you have to apply both the "typename" and "template" keywords (see "SomeFuncArg3Type_t" alias in the [Technique 1 of 2](#Technique1Of2) example). A helper template therefore exists not only for this, but for every member of "FunctionTraits". Therefore, instead of relying on "FunctionTraits" directly as seen in the above examples, you can rely on the [Helper templates](#HelperTemplates) instead. They're easier and cleaner, making the job of extracting or modifying a function's traits a breeze.
 
@@ -251,9 +248,8 @@ constexpr auto SomeFuncReplace3rdArgWithChar_v = TypeName_v<SomeFuncReplace3rdAr
 // Etc. (see "Helper templates" further below for the complete list)
 
 ```
-<a name="LoopingThroughAllFunctionArguments"></a >
 
-## Looping through all function arguments
+## <a name="LoopingThroughAllFunctionArguments"></a>Looping through all function arguments
 
 You can even loop through all arguments using the helper function template [ForEachArg](#ForEachArg). The following example assumes C++20 or later for the lambda template seen below (lambda templates aren't available until C++20 or later), though if targeting C++17 you can easily replace it with your own functor instead (the "operator()" member in your functor needs to be a template however, with the same template args seen in the lambda below and the same code). See [ForEachArg](#ForEachArg) for further details.
 ```C++
@@ -325,9 +321,8 @@ const auto displayArgType = []<std::size_t I, typename ArgTypeT>()
 ////////////////////////////////////////////////
 ForEachArg<F>(displayArgType);
 ```
-<a name="HelperTemplates"></a>
 
-## Helper templates (complete, alphabetical list)
+## <a name="HelperTemplates"></a>Helper templates (complete, alphabetical list)
 
 The following provides a complete (alphabetical) list of all helper templates. Two separate sections exist, the first for [Read traits](#ReadTraits), allowing you to read any part up a function's type, and the second for [Write traits](#WriteTraits), allowing you to update any part of a function's type. Note that the first template arg of every template is the function you're targeting, whose name is always "F" (see [here](#SupportedTypesForF) for details). IMPORTANT: When "F" is a functor, note that all traits implicitly refer (apply) to the non-static member function "F::operator()" unless noted otherwise (so if "F" is the type of a lambda for instance then the traits target "operator()" of the compiler-generated class for that lambda). It should therefore be understood that whenever "F" is a functor and it's cited in the description of each template, the description is normally referring to member function "F::operator()", not class "F" itself.
 
@@ -336,9 +331,8 @@ Please note that for all traits, a TRAITS_FUNCTION_C concept (declared in "TypeT
 Finally, please note that each template below simply wraps the corresponding member of the "FunctionTraits" struct itself
 (or indirectly targets it). As previously described, you can access "FunctionTraits" directly (see this class and its various base classes - you can access all public members), or using any of its own helper templates _not_ documented here (each takes a "FunctionTraits" template arg). The following helper templates however taking a function template arg "F" instead are normally much easier (see these in [Technique 2 of 2](#Technique2Of2) earlier). The syntax for accessing "FunctionTraits" directly (or using any of its own helper templates) is therefore not shown in this document (just the earlier examples in [Technique 1 of 2](#Technique1Of2) only). You can simply review the public members of "FunctionTraits" inherited from its base classes in "TypeTraits.h" in the unlikely event you ever need to work with them directly (or alternatively review the helper templates in "TypeTraits.h" taking a "FunctionTraits" template arg). However, every public member of "FunctionTraits" inherited from its base classes has a helper template taking a function template arg "F" as seen in each template declaration below, including some additional helper templates not available when accessing "FunctionTraits" directly (or its base classes). These helper templates should therefore normally be relied on since they're easier and cleaner, so the following documentation is normally all you ever need to consult.
 
-<a name="ReadTraits"></a>
 
-### _Read traits_
+### <a name="ReadTraits"></a>_Read traits_
   
 <a name="ArgCount_v"></a><details><summary>ArgCount_v</summary>
 ```C++
@@ -512,10 +506,8 @@ inline constexpr tstring_view TypeName_v;
 ```
 Not a template associated with "FunctionTraits" per se, but a helper template you can use to return the user-friendly name of any C++ type as a "tstring_view" (more on this shortly). Just pass the type you're interested in as the template's only template arg. Note however that all helper aliases above such as "ArgType_t" have a corresponding helper "Name" template ("ArgTypeName_v" in the latter case) that simply rely on "TypeName_v" to return the type's user-friendly name (by simply passing the alias itself to "TypeName_v"). You therefore don't have to call "TypeName_v" directly in most cases since a helper variable template already exists that does this for you (again, one for every alias template above, where the name of the variable template returning the type's name is the same as the name of the alias template itself but with the "_t" suffix in the alias' name replaced with "Name_v", e.g., "ArgType_t" and "ArgTypeName_v"). The only time you may need to call "TypeName_v" directly when using "FunctionTraits" is when you use "ForEachArg()" as seen in the [Looping through all function arguments](#LoopingThroughAllFunctionArguments) section above. See the sample code in that section for an example (specifically the call to "TypeName_v" in the "displayArgType" lambda of the example). Note that "TypeName_v" can be passed any C++ type however, not just types associated with "FunctionTraits". You can therefore use it for your own purposes whenever you need the user-friendly name of a C++ type as a compile-time string. Note that "TypeName_v" returns a "tstring_view" (in the "StdExt" namespace) which always resolves to "std::string_view" on non-Microsoft platforms, and on Microsoft platforms, to "std::wstring_view" when compiling for Unicode (usually the case - strings are normally stored in UTF-16 in modern-day Windows), or "std::string_view" otherwise (when compiling for ANSI but this is very rare these days).</details>
 
-<a name="WriteTraits"></a>
-
 ---
-### _Write traits_
+### <a name="WriteTraits"></a>_Write traits_
 
 <a name="AddVariadicArgs_t"></a><details><summary>AddVariadicArgs_t</summary>
 ```C++
@@ -658,16 +650,12 @@ using ReplaceReturnType_t;
 Type alias for "F" after replacing its return type with "NewReturnTypeT".
 </details>
 
-<a name="WhyChooseThisLibrary"></a>
-
-## Why choose this library
+## <a name="WhyChooseThisLibrary"></a>Why choose this library
 In a nutshell, because it's extremely easy to use, with syntax that's consistently very clean (when relying on [Technique 2 of 2](#Technique2Of2) as most normally will), has a very small footprint (once you ignore the many comments in "TypeTraits.h"), and it may be the most complete function traits library available on the web at this writing (based on my attempt to find an equivalent library with calling convention support in particular). It's also significantly smaller than the Boost version ("boost::callable_traits"), which consists of a bloated number of files and at least twice the amount of code (largely due to a needlessly complex design, no disrespect intended). "FunctionTraits" still provides the same features for all intents and purposes however (and a few extra), as well as support for (mainstream) calling conventions as emphasized, which only has limited support in "boost::callable_traits" (but again, it's not enabled by default and the author's own internal comments about it are negative and discourage its use). Note that even when activated, calling convention support in "boost::callable_traits" isn't designed to work in 64 bit builds (it won't compile), while "FunctionTraits" does support it. Note that "boost::callable_traits" does support the experimental "transaction_safe" keyword however (unrelated to calling conventions), but "FunctionTraits" doesn't by design. Since this keyword isn't in the official C++ standard (most have never likely heard of it), and it's questionable if it ever will be (it was first floated in 2015), I've deferred its inclusion until it's actually implemented, if ever. Very few users will be impacted by its absence and including it in "FunctionTraits" can likely be done in less than a day based on my review of the situation.
 
 The upshot is that "FunctionTraits" is generally more complete than other similar libraries I've seen, in particular due to its (mainstream) calling convention support (noting that very few other libraries even exist that can be considered "complete"). Very little could be added at this stage that would benefit most users and would usually require improvements to the C++ standard itself to accommodate. However, even wider support for calling conventions may be added later, to target less frequently used calling conventions that are platform specific (if there's a demand for it). For now its mainstream calling convention support will usually meet the needs of most users.
 
-<a name="DesignConsiderations"></a>
-
-## "FunctionTraits" design considerations (for those who care - not required reading)
+## <a name="DesignConsiderations"></a>"FunctionTraits" design considerations (for those who care - not required reading)
 Note that "FunctionTraits" is not a canonical C++ "traits" class that would likely be considered for inclusion in the C++ standard itself. While it could be with some fairly easy-to-implement changes and (rarely-used) additions (read on), it wasn't designed for this. It was designed for practical, real-world use instead. For instance, it supports most mainstream calling conventions as emphasized earlier which isn't currently addressed in the C++ standard itself. Also note that template arg "F" of "FunctionTraits" and its helper templates isn't confined to pure C++ function types. As described earlier in this document, you can also pass pointers to functions, references to functions, references to pointers to functions, and functors (in all cases referring to their actual C++ types, not any actual instances). Note that references to non-static member function pointers aren't supported however because they're not supported by C++ itself.
 
 While I'm not a member of the C++ committee, it seems very likely that a "canonical" implementation for inclusion in the standard itself likely wouldn't (or might not) address certain features, like calling conventions since they don't currently exist in the C++ standard as described earlier (unless it's ever added at some point). It's also unlikely to support all the variations of pointers and reference types (and/or possibly functors) that "FunctionTraits" handles. In the real world however function types include calling conventions so they need to be detected by a function traits library (not just the default calling convention), and programmers are also often working with raw function types or pointers to functions or functors (or references to functions or references to pointers to functions though these are typically encountered less frequently). For non-static member functions in particular pointers to member functions are the norm. In fact, for non-static member functions, almost nobody in the real world ever works with their actual (non-pointer) function type. I've been programming in C++ for decades and don't recall a single time I've ever worked with the actual type of one. You work with pointers to non-static member functions instead when you need to, such as **void (YourClass::*)()**. Even for free functions (which for our purposes also includes static member functions), since the name of a free function decays into a pointer to the function in most expressions, you often find yourself working with a pointer to such functions, not the actual function type (though you do work with the actual function type sometimes, unlike for non-static member functions which is extremely rare in the real world). Supporting pointers and references to functions and even references to pointers to functions therefore just make things easier even if some consider it unclean (I don't). A practical traits struct should just make it very easy to use without having to manually remove things using "std::remove_pointer" and/or "std::remove_reference" first (which would be required if such a traits struct was designed to handle pure C++ function types only, not pointers and references to function types or even references to pointers). It's just easier and more flexible to use it this way (syntatically cleaner). Some would argue it's not a clean approach but I disagree. It may not be consistent with how things are normally done in the standard itself (again, I suspect it might only handle raw function types only), but it better deals with the real-world needs of most developers IMHO (so it's "clean" because its syntax is designed to cleanly support that).
