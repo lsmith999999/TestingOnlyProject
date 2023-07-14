@@ -503,7 +503,7 @@ inline constexpr tstring_view ReturnTypeName_v;
 ```
 Same as "ReturnType_t" just above but returns this as a (WYSIWYG) string (of type "tstring_view" - see [TypeName_v](#TypeName_v) for details). A float would therefore be (literally) returned as "float" for instance (quotes not included).</details>
 
-<details name="TypeName_v"><summary>TypeName_v</summary>
+<a name="TypeName_v"></a><details><summary>TypeName_v</summary>
 ```C++
 template <typename F>
 inline constexpr tstring_view TypeName_v;
