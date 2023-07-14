@@ -379,7 +379,6 @@ inline constexpr tstring_view CallingConventionName_v;
 Same as "CallingConvention_v" just above but returns this as a (WYSIWYG) string (of type "tstring_view" - see [TypeName_v](#TypeName_v) for details).</details>
 
 <a name="ForEachArg"></a>
-
 <details><summary>ForEachArg</summary>
 ```C++
 template <TRAITS_FUNCTION_C F,>
