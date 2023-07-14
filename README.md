@@ -156,7 +156,7 @@ constexpr auto SomeFuncReplace3rdArgWithChar_v = TypeName_v<SomeFuncReplace3rdAr
 
 ```
 
-<a name="Technique2Of2"></a>T
+<a name="Technique2Of2"></a>
 ## Technique 2 of 2 - Using the helper templates instead of "FunctionTraits" directly (recommended)
 
 Alternatively, instead of using "FunctionTraits" directly ([Technique 1 of 2](#Technique1Of2) above), you can rely on the second technique just below instead, which is normally much cleaner (and you should normally use it). As seen in the first technique above, relying on "FunctionTraits" directly can result in verbose syntax. For instance, due to the syntax of C++ itself, accessing the type of a given arg is ugly because you have to apply both the "typename" and "template" keywords (see "SomeFuncArg3Type_t" alias in the [Technique 1 of 2](#Technique1Of2) example). A helper template therefore exists not only for this, but for every member of "FunctionTraits". Therefore, instead of relying on "FunctionTraits" directly as seen in the above examples, you can rely on the [Helper templates](#HelperTemplates) instead. They're easier and cleaner, making the job of extracting or modifying a function's traits a breeze.
