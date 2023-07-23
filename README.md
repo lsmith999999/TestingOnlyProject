@@ -1,4 +1,3 @@
-<a
 # FunctionTraits
 ## C++ function traits library (single header-only) for retrieving info about any function (arg types, arg count, return type, etc.). Clean and easy-to-use, the most "complete" implementation on the web.
 
