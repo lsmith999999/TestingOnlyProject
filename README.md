@@ -21,7 +21,7 @@ The above covers almost all traits most programmers will ever be interested in. 
 ## Usage (GCC or compatible, Clang, Microsoft and Intel compilers only - C++17 and later)
 To use "FunctionTraits", simply add both "TypeTraits.h" and "CompilerVersions.h" to your code and then #include "TypeTraits.h" wherever you require it (all code is declared in namespace "StdExt"). Note that you need not explicitly #include "CompilerVersions.h" unless you wish to use it independently of "TypeTraits.h", since "TypeTraits.h" itself #includes it as a dependency ("CompilerVersions.h" simply declares various #defined constants used to identify the version of C++ you're using, and a few other compiler-related declarations - you're free to use these in your own code as well if you wish). The struct (template) "FunctionTraits" is then immediately available for use (see [Technique 1 of 2](#technique1of2) below), though you'll normally rely on its [Helper templates](#helpertemplates) instead (see [Technique 2 of 2](#technique2of2) below). Note that both files above have no platform-specific dependencies, except when targeting Microsoft, where the native Microsoft header <tchar.h> is expected to be in the usual #include search path (and it normally will be on Microsoft platforms). Otherwise they rely on the C++ standard headers only which are therefore (also) expected to be in the usual search path on your platform.
 
-<a name="SupportedTypesForF"></a>Note that template arg "F" is the first (and usually only) template arg of "FunctionTraits" and all its [Helper templates](#helpertemplates), and refers to the function's type which can be any of the following:
+<a name="supportedtypesforf"></a>Note that template arg "F" is the first (and usually only) template arg of "FunctionTraits" and all its [Helper templates](#helpertemplates), and refers to the function's type which can be any of the following:
 
 1. Free functions which also includes static member functions, in either case referring to the function's actual C++ type (which are always considered to be free functions - non-static member functions are always handled by 4 or 5 below).
 2. Pointers and references to free functions
@@ -34,7 +34,7 @@ Note that the code also incorporates concepts when targeting C++20 or later or "
 
 Once you've #included "TypeTraits.h", there are two ways to use the "FunctionTraits" class. You can either use "FunctionTraits" directly like so (but with verbose syntax that [Technique 2 Of 2](#technique2of2) below eliminates):
 
-<a name="Technique1Of2"></a>
+<a name="technique1of2"></a>
 ## Technique 1 of 2 - Using "FunctionTraits" directly (not usually recommended)
 
 ```C++
@@ -156,7 +156,7 @@ constexpr auto SomeFuncReplace3rdArgWithChar_v = TypeName_v<SomeFuncReplace3rdAr
 
 ```
 
-<a name="Technique2Of2"></a>
+<a name="technique2of2"></a>
 ## Technique 2 of 2 - Using the helper templates instead of "FunctionTraits" directly (recommended)
 
 Alternatively, instead of using "FunctionTraits" directly ([Technique 1 of 2](#technique1of2) above), you can rely on the second technique just below instead, which is normally much cleaner (and you should normally use it). As seen in the first technique above, relying on "FunctionTraits" directly can result in verbose syntax. For instance, due to the syntax of C++ itself, accessing the type of a given arg is ugly because you have to apply both the "typename" and "template" keywords (see "SomeFuncArg3Type_t" alias in the [Technique 1 of 2](#technique1of2) example). A helper template therefore exists not only for this, but for every member of "FunctionTraits". Therefore, instead of relying on "FunctionTraits" directly as seen in the above examples, you can rely on the [Helper templates](#helpertemplates) instead. They're easier and cleaner, making the job of extracting or modifying a function's traits a breeze.
@@ -251,7 +251,7 @@ constexpr auto SomeFuncReplace3rdArgWithChar_v = TypeName_v<SomeFuncReplace3rdAr
 
 ```
 
-<a name="LoopingThroughAllFunctionArguments"></a>
+<a name="loopingthroughallfunctionarguments"></a>
 ## Looping through all function arguments
 
 You can even loop through all arguments using the helper function template [ForEachArg](#foreacharg). The following example assumes C++20 or later for the lambda template seen below (lambda templates aren't available until C++20 or later), though if targeting C++17 you can easily replace it with your own functor instead (the "operator()" member in your functor needs to be a template however, with the same template args seen in the lambda below and the same code). See [ForEachArg](#foreacharg) for further details.
@@ -325,7 +325,7 @@ const auto displayArgType = []<std::size_t I, typename ArgTypeT>()
 ForEachArg<F>(displayArgType);
 ```
 
-<a name="HelperTemplates"></a>
+<a name="helpertemplates"></a>
 ## Helper templates (complete, alphabetical list)
 
 The following provides a complete (alphabetical) list of all helper templates. Two separate sections exist, the first for [Read traits](#readtraits), allowing you to read any part up a function's type, and the second for [Write traits](#writetraits), allowing you to update any part of a function's type. Note that the first template arg of every template is the function you're targeting, whose name is always "F" (see [here](#supportedtypesforf) for details). IMPORTANT: When "F" is a functor, note that all traits implicitly refer (apply) to the non-static member function "F::operator()" unless noted otherwise (so if "F" is the type of a lambda for instance then the traits target "operator()" of the compiler-generated class for that lambda). It should therefore be understood that whenever "F" is a functor and it's cited in the description of each template, the description is normally referring to member function "F::operator()", not class "F" itself.
@@ -335,17 +335,17 @@ Please note that for all traits, a TRAITS_FUNCTION_C concept (declared in "TypeT
 Finally, please note that each template below simply wraps the corresponding member of the "FunctionTraits" struct itself
 (or indirectly targets it). As previously described, you can access "FunctionTraits" directly (see this class and its various base classes - you can access all public members), or using any of its own helper templates _not_ documented here (each takes a "FunctionTraits" template arg). The following helper templates however taking a function template arg "F" instead are normally much easier (see these in [Technique 2 of 2](#technique2of2) earlier). The syntax for accessing "FunctionTraits" directly (or using any of its own helper templates) is therefore not shown in this document (just the earlier examples in [Technique 1 of 2](#technique1of2) only). You can simply review the public members of "FunctionTraits" inherited from its base classes in "TypeTraits.h" in the unlikely event you ever need to work with them directly (or alternatively review the helper templates in "TypeTraits.h" taking a "FunctionTraits" template arg). However, every public member of "FunctionTraits" inherited from its base classes has a helper template taking a function template arg "F" as seen in each template declaration below, including some additional helper templates not available when accessing "FunctionTraits" directly (or its base classes). These helper templates should therefore normally be relied on since they're easier and cleaner, so the following documentation is normally all you ever need to consult.
 
-<a name="ReadTraits"></a>
+<a name="readtraits"></a>
 ### _Read traits_
   
-<a name="ArgCount_v"></a><details><summary>ArgCount_v</summary>
+<a name="argcount_v"></a><details><summary>ArgCount_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr std::size_t ArgCount_v;
 ```
 "std::size_t" variable storing the number of arguments in "F" *not* including variadic arguments if any. Will be zero if function "F" has no (non-variadic) args. Note that this count is formally called "arity" but this variable is given a more user-friendly name.<br /><br /><ins>IMPORTANT</ins>:<br />Please note that if you wish to check if a function's argument list is completely empty, then inspecting this helper template for zero (0) is not sufficient, since it may return zero but still contain variadic args. To check for a completely empty argument list, call [IsEmptyArgList_v](#isemptyarglist_v) instead.</details>
 
-<a name="ArgType_t"></a><details><summary>ArgType_t</summary>
+<a name="argtype_t"></a><details><summary>ArgType_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F,
           std::size_t I>
@@ -353,7 +353,7 @@ using ArgType_t;
 ```
 Type alias for the type of the "Ith" arg in function "F", where "I" is in the range 0 to the number of (non-variadic) arguments in "F" minus 1 (see "ArgCount_v" variable just above). Pass "I" as the (zero-based) 2nd template arg (see earlier examples). Note that if "I" is greater than or equal to the number of args in "F" (again, see "ArgCount_v" just above), then a compiler error will occur (so if "F" has no non-variadic args whatsoever, a compiler error will always occur, even if passing zero).</details>
 
-<a name="ArgTypeName_v"></a><details><summary>ArgTypeName_v</summary>
+<a name="argtypename_v"></a><details><summary>ArgTypeName_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F,
           std::size_t I>
@@ -361,28 +361,28 @@ inline constexpr tstring_view ArgTypeName_v;
 ```
 Same as "ArgType_t" just above but returns this as a (WYSIWYG) string (of type "tstring_view" - see [TypeName_v](#typename_v) for details). A float would therefore be (literally) returned as "float" for instance (quotes not included).</details>
 
-<a name="ArgTypes_t"></a><details><summary>ArgTypes_t</summary>
+<a name="argtypes_t"></a><details><summary>ArgTypes_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using ArgTypes_t;
 ```
 Type alias for a "std::tuple" representing all non-variadic argument types in "F". Rarely required in practice however since you'll usually rely on "ArgType_t" or "ArgTypeName_v" to retrieve the type of a specific argument (see these above). If you require the "std::tuple" that stores all (non-variadic) argument types, then it's typically (usually) because you want to iterate all of them (say, to process the type of every argument in a loop). If you require this, then you can use the "ForEachArg()" helper function (template) further below. See this for details.</details>
 
-<a name="CallingConvention_v"></a><details><summary>CallingConvention_v</summary>
+<a name="callingconvention_v"></a><details><summary>CallingConvention_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr CallingConvention CallingConvention_v;
 ```
 Calling convention of "F" returned as a "CallingConvention" enumerator (declared in "TypeTraits.h"). Calling conventions include "Cdecl", "Stdcall", etc. (note that functions with calling conventions not seen in this enumerator are not supported, but all mainstream calling conventions are). Also please note that compilers will sometimes change the calling convention declared on your functions to the "Cdecl" calling convention depending on the compiler options in effect at the time (in particular when compiling for 64 bits opposed to 32 bits, though the "Vectorcall" calling convention *is* supported on 64 bits but not on GCC since it doesn't support this particular calling convention at all). In this case the calling convention on your function is ignored and "CallingConvention_v" will correctly return the "Cdecl" calling convention (if that's what the compiler actually used).</details>
 
-<a name="CallingConventionName_v"></a><details><summary>CallingConventionName_v</summary>
+<a name="callingconventionname_v"></a><details><summary>CallingConventionName_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr tstring_view CallingConventionName_v;
 ```
 Same as "CallingConvention_v" just above but returns this as a (WYSIWYG) string (of type "tstring_view" - see [TypeName_v](#typename_v) for details).</details>
 
-<a name="ForEachArg"></a><details><summary>ForEachArg</summary>
+<a name="foreacharg"></a><details><summary>ForEachArg</summary>
 ```C++
 template <TRAITS_FUNCTION_C F,>
           FOR_EACH_TUPLE_FUNCTOR_C ForEachTupleFunctorT>
@@ -390,98 +390,98 @@ inline constexpr bool ForEachArg(ForEachTupleFunctorT &&);
 ```
 Not a traits template (unlike all other read traits), but a helper function template you can use to iterate all arguments for function "F" if required (though rare in practice since you'll usually rely on "ArgType_t" or "ArgTypeName_v" to retrieve the type of a specific argument - see these above). See [Looping through all function arguments](#loopingthroughallfunctionarguments) earlier for an example, as well as the declaration of "ForEachArg()" in "TypeTraits.h" for full details (or for a complete program that also uses it, see the [demo](https://godbolt.org/z/fx8MWGv99) program, also available in the repository itself).</details>
 
-<a name="FunctionType_t"></a><details><summary>FunctionType_t</summary>
+<a name="functiontype_t"></a><details><summary>FunctionType_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using FunctionType_t;
 ```
 Type alias identical to "F" itself unless "F" is a functor (i.e., "IsFunctor_v" returns true), in which case it's a type alias for the "operator()" member of the functor (to retrieve the functor type itself in this case, see [MemberFunctionClass_t](#memberfunctionclass_t)).</details>
 
-<a name="FunctionTypeName_v"></a><details><summary>FunctionTypeName_v</summary>
+<a name="functiontypename_v"></a><details><summary>FunctionTypeName_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr bool FunctionTypeName_v;
 ```
 Same as "FunctionType_t" just above but returns this as a (WYSIWYG) string (of type "tstring_view" - see [TypeName_v](#typename_v) for details).</details>
 
-<a name="IsEmptyArgList_v"></a><details><summary>IsEmptyArgList_v</summary>
+<a name="isemptyarglist_v"></a><details><summary>IsEmptyArgList_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr bool IsEmptyArgList_v;
 ```
 "bool" variable set to "true" if the function represented by "F" has an empty arg list (it has no args whatsoever including variadic args), or "false" otherwise. If true then note that "ArgCount_v" is guaranteed to return zero (0), and "IsVariadic_v" is guaranteed to return false.<br /><br /><ins>IMPORTANT</ins>:<br />Note that you should rely on this helper to determine if a function's argument list is completely empty opposed to checking the "ArgCount_v" helper for zero (0), since the latter returns zero only if "F" has no non-variadic args. If it has variadic args but no others, i.e., its argument list is "(...)", then the argument list isn't empty even though "ArgCount_v" returns zero (since it still has variadic args). Caution advised.</details>
 
-<a name="IsFreeFunction_v"></a><details><summary>IsFreeFunction_v</summary>
+<a name="isfreefunction_v"></a><details><summary>IsFreeFunction_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr bool IsFreeFunction_v;
 ```
 "bool" variable set to "true" if "F" is a free function (including static member functions), or "false" otherwise.</details>
 
-<a name="IsFunctor_v"></a><details><summary>IsFunctor_v</summary>
+<a name="isfunctor_v"></a><details><summary>IsFunctor_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr bool IsFunctor_v;
 ```
 "bool" variable set to "true" if "F" is a functor (the functor's class/struct was passed for "F") or "false" otherwise. Note that when true, [IsMemberFunction_v](#ismemberfunction_v) is also guaranteed to be true.</details>
 
-<a name="IsMemberFunction_v"></a><details><summary>IsMemberFunction_v</summary>
+<a name="ismemberfunction_v"></a><details><summary>IsMemberFunction_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr bool IsMemberFunction_v;
 ```
 "bool" variable set to "true" if "F" is a non-static member function (including when "F" is a functor), or "false" otherwise (if you need to specifically check for functors only then see "IsFunctor_v" just above). Note that you may need to invoke this before accessing the following helper templates. Since the following are applicable to non-static member functions only, if you don't know whether "F" is a non-static member function ahead of time (or a functor), then you should normally call "IsMemberFunction_v" to determine this first. If it's "false" then "F" is a free function (which includes static member functions), so a call to any of the following will result in default values being returned that aren't applicable to free functions (so you shouldn't normally invoke them unless you're ok with the default values they return for free functions):<br /><br />- IsMemberFunctionConst_v<br />- IsMemberFunctionVolatile_v<br />- MemberFunctionClass_t<br />- MemberFunctionClassName_v<br />- MemberFunctionRefQualifier_v<br />- MemberFunctionRefQualifierName_v</details>
 
-<a name="IsMemberFunctionConst_v"></a><details><summary>IsMemberFunctionConst_v</summary>
+<a name="ismemberfunctionconst_v"></a><details><summary>IsMemberFunctionConst_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr bool IsMemberFunctionConst_v;
 ```
 "bool" variable applicable only if "F" is a non-static member function (or a functor). Set to "true" if the function has the "const" cv-qualifier (it's declared with the "const" keyword) or "false" otherwise. Always "false" for free functions including static member functions (not applicable to either). You may therefore wish to invoke [IsMemberFunction_v](#ismemberfunction_v) to detect if "F" is in fact a non-static member function (or functor) before using this trait.</details>
 
-<a name="IsMemberFunctionVolatile_v"></a><details><summary>IsMemberFunctionVolatile_v</summary>
+<a name="ismemberfunctionvolatile_v"></a><details><summary>IsMemberFunctionVolatile_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr bool IsMemberFunctionVolatile_v;
 ```
 "bool" variable applicable only if "F" is a non-static member function  (or a functor). Set to "true" if the function has the "volatile" cv-qualifier (its declared with the "volatile" keyword) or "false" otherwise. Always "false" for free functions including static member functions (not applicable to either). You may therefore wish to invoke [IsMemberFunction_v](#ismemberfunction_v) to detect if "F" is in fact a non-static member function (or functor) before using this trait.</details>
 
-<a name="IsNoexcept_v"></a><details><summary>IsNoexcept_v</summary>
+<a name="isnoexcept_v"></a><details><summary>IsNoexcept_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr bool IsNoexcept_v;
 ```
 "bool" variable set to "true" if the function is declared as "noexcept" or "false" otherwise (always false if the "noexcept" specifier is absent in the function, otherwise, if present then it evaluates to "true" if no bool expression is present in the "noexcept" specifier (the expression has been omitted), or the result of the bool expression otherwise - WYSIWYG).</details>
 
-<a name="IsVariadic_v"></a><details><summary>IsVariadic_v</summary>
+<a name="isvariadic_v"></a><details><summary>IsVariadic_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr bool IsVariadic_v;
 ```
 "bool" variable set to true if "F" is a variadic function (last arg of "F" is "...") or false otherwise.</details>
 
-<a name="MemberFunctionClass_t"></a><details><summary>MemberFunctionClass_t</summary>
+<a name="memberfunctionclass_t"></a><details><summary>MemberFunctionClass_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using MemberFunctionClass_t;
 ```
 If "F" is a non-static member function (or a functor), a type alias for the type of the class (or struct) that declares that function (same as "F" itself if "F" is a functor). Always "void" otherwise (for free functions including static member functions). You may therefore wish to invoke [IsMemberFunction_v](#ismemberfunction_v) to detect if "F" is in fact a non-static member function (or functor) before applying this trait.</details>
 
-<a name="MemberFunctionClassName_v"></a><details><summary>MemberFunctionClassName_v</summary>
+<a name="memberfunctionclassname_v"></a><details><summary>MemberFunctionClassName_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr tstring_view MemberFunctionClassName_v;
 ```
 Same as "MemberFunctionClass_t" just above but returns this as a (WYSIWYG) string (of type "tstring_view" - see [TypeName_v](#typename_v) for details).</details>
 
-<a name="MemberFunctionRefQualifier_v"></a><details><summary>MemberFunctionRefQualifier_v</summary>
+<a name="memberfunctionrefqualifier_v"></a><details><summary>MemberFunctionRefQualifier_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr RefQualifier MemberFunctionRefQualifier_v;
 ```
 "RefQualifier" variable, a proprietary enumerator in "TypeTraits.h" applicable only if "F" is a non-static member function (or a functor). Set to "RefQualifier::None" if the function isn't declared with any reference qualifiers (usually the case for non-static member functions in practice, and always the case for free functions since it's not applicable), "RefQualifier::LValue" if the function is declared with the "&" reference qualifier, or "RefQualifier::RValue" if the function is declared with the "&&" reference qualifier. Note that you may wish to invoke [IsMemberFunction_v](#ismemberfunction_v) to detect if "F" is in fact a non-static member function (or functor) before applying this trait.</details>
 
-<a name="MemberFunctionRefQualifierName_v"></a><details><summary>MemberFunctionRefQualifierName_v</summary>
+<a name="memberfunctionrefqualifiername_v"></a><details><summary>MemberFunctionRefQualifierName_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F,
           bool UseAmpersands = true>
@@ -489,21 +489,21 @@ inline constexpr tstring_view MemberFunctionRefQualifierName_v;
 ```
 Same as "MemberFunctionRefQualifier_v" just above but returns this as a (WYSIWYG) string (of type "tstring_view" - see [TypeName_v](#typename_v) for details). Note that this template also takes an extra template arg besides function "F", a "bool" called "UseAmpersands", indicating whether the returned string should be returned as "&" or "&&" (if the function is declared with an "&" or "&&" reference qualifier respectively), or "LValue" or "RValue" otherwise. Defaults to "true" if not specified (returns "&" or "&&" by default). Not applicable however if no reference qualifiers are present ("None" is always returned).</details>
 
-<a name="ReturnType_t"></a><details><summary>ReturnType_t</summary>
+<a name="returntype_t"></a><details><summary>ReturnType_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using ReturnType_t;
 ```
 Type alias for the return type of function "F".</details>
 
-<a name="ReturnTypeName_v"></a><details><summary>ReturnTypeName_v</summary>
+<a name="returntypename_v"></a><details><summary>ReturnTypeName_v</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 inline constexpr tstring_view ReturnTypeName_v;
 ```
 Same as "ReturnType_t" just above but returns this as a (WYSIWYG) string (of type "tstring_view" - see [TypeName_v](#typename_v) for details). A float would therefore be (literally) returned as "float" for instance (quotes not included).</details>
 
-<a name="TypeName_v"></a><details><summary>TypeName_v</summary>
+<a name="typename_v"></a><details><summary>TypeName_v</summary>
 ```C++
 template <typename T>
 inline constexpr tstring_view TypeName_v;
@@ -511,87 +511,87 @@ inline constexpr tstring_view TypeName_v;
 Not a template associated with "FunctionTraits" per se, but a helper template you can use to return the user-friendly name of any C++ type as a "tstring_view" (more on this shortly). Just pass the type you're interested in as the template's only template arg. Note however that all helper aliases above such as "ArgType_t" have a corresponding helper "Name" template ("ArgTypeName_v" in the latter case) that simply rely on "TypeName_v" to return the type's user-friendly name (by simply passing the alias itself to "TypeName_v"). You therefore don't have to call "TypeName_v" directly for any of the type aliases in this library since a helper variable template already exists that does this for you (again, one for every alias template above, where the name of the variable template returning the type's name is the same as the name of the alias template itself but with the "_t" suffix in the alias' name replaced with "Name_v", e.g., "ArgType_t" and "ArgTypeName_v"). The only time you may need to call "TypeName_v" directly when using "FunctionTraits" is when you use "ForEachArg()" as seen in the [Looping through all function arguments](#loopingthroughallfunctionarguments) section above. See the sample code in that section for an example (specifically the call to "TypeName_v" in the "displayArgType" lambda of the example).<br/><br/>Note that "TypeName_v" can be passed any C++ type however, not just types associated with "FunctionTraits". You can therefore use it for your own purposes whenever you need the user-friendly name of a C++ type as a compile-time string. Note that "TypeName_v" returns a "tstring_view" (in the "StdExt" namespace) which always resolves to "std::string_view" on non-Microsoft platforms, and on Microsoft platforms, to "std::wstring_view" when compiling for Unicode (usually the case - strings are normally stored in UTF-16 in modern-day Windows), or "std::string_view" otherwise (when compiling for ANSI but this is very rare these days).</details>
 
 ---
-<a name="WriteTraits"></a>
+<a name="writetraits"></a>
 ### _Write traits_
 
-<a name="AddVariadicArgs_t"></a><details><summary>AddVariadicArgs_t</summary>
+<a name="addvariadicargs_t"></a><details><summary>AddVariadicArgs_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using AddVariadicArgs_t;
 ```
 Type alias for "F" after adding "..." to the end of its argument list if not already present. Note that the calling convention is also changed to the "Cdecl" calling convention for the given compiler. This is the only supported calling convention for variadic functions in this release but most platforms require this calling convention for variadic functions. It ensures that the calling function (opposed to the called function) pops the stack of arguments after the function is called, which is required by variadic functions. Other calling conventions that also do this are possible though none are currently supported in this release (since none of the currently supported compilers support this - such calling conventions are rare in practice).</details>
 
-<a name="AddNoexcept_t"></a><details><summary>AddNoexcept_t</summary>
+<a name="addnoexcept_t"></a><details><summary>AddNoexcept_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using AddNoexcept_t;
 ```
 Type alias for "F" after adding "noexcept" to "F" if not already present.</details>
 
-<a name="MemberFunctionAddConst_t"></a><details><summary>MemberFunctionAddConst_t</summary>
+<a name="memberfunctionaddconst_t"></a><details><summary>MemberFunctionAddConst_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using MemberFunctionAddConst_t;
 ```
 If "F" is a non-static member function, yields a type alias for "F" after adding the "const" cv-qualifier to the function if not already present. If "F" is a free function including static member functions, yields "F" itself (effectively does nothing since "const" applies to non-static member functions only).</details>
 
-<a name="MemberFunctionAddCV_t"></a><details><summary>MemberFunctionAddCV_t</summary>
+<a name="memberfunctionaddcv_t"></a><details><summary>MemberFunctionAddCV_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using MemberFunctionAddCV_t;
 ```
 If "F" is a non-static member function, yields a type alias for "F" after adding both the "const" AND "volatile" cv-qualifiers to the function if not already present. If "F" is a free function including static member functions, yields "F" itself (effectively does nothing since "const" and "volatile" apply to non-static member functions only).</details>
 
-<a name="MemberFunctionAddLValueReference_t"></a><details><summary>MemberFunctionAddLValueReference_t</summary>
+<a name="memberfunctionaddlvaluereference_t"></a><details><summary>MemberFunctionAddLValueReference_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using MemberFunctionAddLValueReference_t;
 ```
 If "F" is a non-static member function, yields a type alias for "F" after adding the "&" reference-qualifier to the function if not already present (replacing the "&&" reference-qualifier if present). If "F" is a free function including static member functions, yields "F" itself (effectively does nothing since reference-qualifiers apply to non-static member functions only).</details>
 
-<a name="MemberFunctionAddRValueReference_t"></a><details><summary>MemberFunctionAddRValueReference_t</summary>
+<a name="memberfunctionaddrvaluereference_t"></a><details><summary>MemberFunctionAddRValueReference_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using MemberFunctionAddRValueReference_t;
 ```
 If "F" is a non-static member function, yields a type alias for "F" after adding the "&&" reference-qualifier to the function (replacing the "&" reference-qualifier if present). If "F" is a free function including static member functions, yields "F" itself (effectively does nothing since reference-qualifiers apply to non-static member functions only).</details>
 
-<a name="MemberFunctionAddVolatile_t"></a><details><summary>MemberFunctionAddVolatile_t</summary>
+<a name="memberfunctionaddvolatile_t"></a><details><summary>MemberFunctionAddVolatile_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using MemberFunctionAddVolatile_t;
 ```
 If "F" is a non-static member function, yields a type alias for "F" after adding the "volatile" cv-qualifier to the function if not already present. If "F" is a free function including static member functions, yields "F" itself (effectively does nothing since "volatile" applies to non-static member functions only).</details>
 
-<a name="MemberFunctionRemoveConst_t"></a><details><summary>MemberFunctionRemoveConst_t</summary>
+<a name="memberfunctionremoveconst_t"></a><details><summary>MemberFunctionRemoveConst_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using MemberFunctionRemoveConst_t;
 ```
 If "F" is a non-static member function, yields a type alias for "F" after removing the "const" cv-qualifier from the function if present. If "F" is a free function including static member functions, yields "F" itself (effectively does nothing since "const" applies to non-static member functions only so will never be present otherwise).</details>
 
-<a name="MemberFunctionRemoveCV_t"></a><details><summary>MemberFunctionRemoveCV_t</summary>
+<a name="memberfunctionremovecv_t"></a><details><summary>MemberFunctionRemoveCV_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using MemberFunctionRemoveCV_t;
 ```
 If "F" is a non-static member function, yields a type alias for "F" after removing both the "const" AND "volatile" cv-qualifiers from the function if present. If "F" is a free function including static member functions, yields "F" itself (effectively does nothing since "const" and "volatile" apply to non-static member functions only so will never be present otherwise).</details>
 
-<a name="MemberFunctionRemoveReference_t"></a><details><summary>MemberFunctionRemoveReference_t</summary>
+<a name="memberfunctionremovereference_t"></a><details><summary>MemberFunctionRemoveReference_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using MemberFunctionRemoveReference_t;
 ```
 If "F" is a non-static member function, yields a type alias for "F" after removing the "&" or "&&" reference-qualifier from the function if present. If "F" is a free function including static member functions, yields "F" itself (effectively does nothing since reference-qualifiers to non-static member functions only so will never be present otherwise).</details>
 
-<a name="MemberFunctionRemoveVolatile_t"></a><details><summary>MemberFunctionRemoveVolatile_t</summary>
+<a name="memberfunctionremovevolatile_t"></a><details><summary>MemberFunctionRemoveVolatile_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using MemberFunctionRemoveVolatile_t;
 ```
 If "F" is a non-static member function, yields a type alias for "F" after removing the "volatile" cv-qualifier from the function if present. If "F" is a free function including static member functions, yields "F" itself (effectively does nothing since "volatile" applies to non-static member functions only so will never be present otherwise).</details>
 
-<a name="MemberFunctionReplaceClass_t"></a><details><summary>MemberFunctionReplaceClass_t</summary>
+<a name="memberfunctionreplaceclass_t"></a><details><summary>MemberFunctionReplaceClass_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F,
           typename NewClassT>
@@ -599,21 +599,21 @@ using MemberFunctionReplaceClass_t;
 ```
 If "F" is a non-static member function, yields a type alias for "F" after replacing the class this function belongs to with "NewClassT". If "F" is a free function including static member functions, yields "F" itself (effectively does nothing since a "class" applies to non-static member functions only so will never be present otherwise - note that due to limitations in C++ itself, replacing the class for static member functions is not supported).</details>
 
-<a name="RemoveVariadicArgs_t"></a><details><summary>RemoveVariadicArgs_t</summary>
+<a name="removevariadicargs_t"></a><details><summary>RemoveVariadicArgs_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using RemoveVariadicArgs_t;
 ```
 If "F" is a variadic function (its last arg is "..."), yields a type alias for "F" after removing the "..." from the argument list. All non-variadic arguments (if any) remain intact (only the "..." is removed).</details>
 
-<a name="RemoveNoexcept_t"></a><details><summary>RemoveNoexcept_t</summary>
+<a name="removenoexcept_t"></a><details><summary>RemoveNoexcept_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F>
 using RemoveNoexcept_t;
 ```
 Type alias for "F" after removing "noexcept" from "F" if present.</details>
 
-<a name="ReplaceArgs_t"></a><details><summary>ReplaceArgs_t</summary>
+<a name="replaceargs_t"></a><details><summary>ReplaceArgs_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F,
           typename... NewArgsT>
@@ -621,7 +621,7 @@ using ReplaceArgs_t;
 ```
 Type alias for "F" after replacing all its existing non-variadic arguments with the args given by "NewArgsT" (a parameter pack of the types that become the new argument list). If none are passed then an empty argument list results instead, though if variadic args are present in "F" then they still remain intact (the "..." remains - read on). The resulting alias is identical to "F" itself except that the non-variadic arguments in "F" are completely replaced with "NewArgsT". Note that if "F" is a variadic function (its last parameter is "..."), then it remains a variadiac function after the call (the "..." remains in place). If you wish to explicitly add or remove the "..." as well then pass the resulting type to "AddVariadicArgs_t" or "RemoveVariadicArgs_t" respectively (either before or after the call to "ReplaceArgs_t"). Note that if you wish to replace specific arguments instead of all of them, then call "ReplaceNthArg_t" instead. Lastly, you can alternatively use "ReplaceArgsTuple_t" instead of "ReplaceArgs_t" if you have a "std::tuple" of types you wish to use for the argument list instead of a parameter pack. "ReplaceArgsTuple_t" is identical to "ReplaceArgs_t" otherwise (it ultimately defers to it).</details>
 
-<a name="ReplaceArgsTuple_t"></a><details><summary>ReplaceArgsTuple_t</summary>
+<a name="replaceargstuple_t"></a><details><summary>ReplaceArgsTuple_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F,
           TUPLE_C NewArgsTupleT>
@@ -629,7 +629,7 @@ using ReplaceArgsTuple_t;
 ```
 Identical to "ReplaceArgs_t" just above except the argument list is passed as a "std::tuple" instead of a parameter pack (via the 2nd template arg). The types in the "std::tuple" are therefore used for the resulting argument list. "ReplaceArgsTuple_t" is otherwise identical to "ReplaceArgs_t" (it ultimately defers to it).</details>
 
-<a name="ReplaceCallingConvention_t"></a><details><summary>ReplaceCallingConvention_t</summary>
+<a name="replacecallingconvention_t"></a><details><summary>ReplaceCallingConvention_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F,
           CallingConvention NewCallingConventionT>
@@ -637,7 +637,7 @@ using ReplaceCallingConvention_t;
 ```
 Type alias for "F" after replacing its calling convention with the platform-specific calling convention corresponding to "NewCallingConventionT" (a "CallingConvention" enumerator declared in "TypeTraits.h"). For instance, if you pass  "CallingConvention::FastCall" then the calling convention on "F" is replaced with "\_\_attribute\_\_((cdecl))" on GCC and Clang, but "\_\_cdecl" on Microsoft platforms. Note however that the calling convention for variadic functions (those whose last arg is "...") can't be changed in this release. Variadic functions require that the calling function pop the stack to clean up passed arguments and only the "Cdecl" calling convention supports that in this release (on all supported compilers at this writing). Attempts to change it are therefore ignored. Note that you also can't change the calling convention of free functions to "CallingConvention::Thiscall" (including for static member functions since they're considered "free" functions). Attempts to do so are ignored since the latter calling convention applies to non-static member functions only. Lastly, please note that compilers will sometimes change the calling convention declared on your functions to the "Cdecl" calling convention depending on the compiler options in effect at the time (in particular when compiling for 64 bits opposed to 32 bits, though the "Vectorcall" calling convention *is* supported on 64 bits on compilers that support this calling convention). Therefore, if you specify a calling convention that the compiler changes to "Cdecl" based on the compiler options currently in effect, then "ReplaceCallingConvention_t" will also ignore your calling convention and apply "Cdecl" instead (since that's what the compiler actually uses).</details>
 
-<a name="ReplaceNthArg_t"></a><details><summary>ReplaceNthArg_t</summary>
+<a name="replacentharg_t"></a><details><summary>ReplaceNthArg_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F,
           std::size_t N,
@@ -646,7 +646,7 @@ using ReplaceNthArg_t;
 ```
 Type alias for "F" after replacing its (zero-based) "Nth" argument with "NewArgT". Pass "N" via the 2nd template arg (i.e., the zero-based index of the arg you're targeting), and the type you wish to replace it with via the 3rd template arg ("NewArgT"). The resulting alias is therefore identical to "F" except its "Nth" argument is replaced by "NewArgT" (so passing, say, zero-based "2" for "N" and "int" for "NewArgT" would replace the 3rd function argument with an "int"). Note that "N" must be less than the number of arguments in the function or a "static_assert" will occur (new argument types can't be added using this trait, only existing argument types replaced). If you need to replace multiple arguments then recursively call "ReplaceNthArg_t" again, passing the result as the "F" template arg of "ReplaceNthArg_t" as many times as you need to (each time specifying a new "N" and "NewArgT"). If you wish to replace all arguments at once then call "ReplaceArgs_t" or "ReplaceArgsTuple_t" instead. Lastly, note that if "F" has variadic arguments (it ends with "..."), then these remain intact. If you need to remove them then call "RemoveVariadicArgs_t" before or after the call to "ReplaceNthArg_t".</details>
 
-<a name="ReplaceReturnType_t"></a><details><summary>ReplaceReturnType_t</summary>
+<a name="replacereturntype_t"></a><details><summary>ReplaceReturnType_t</summary>
 ```C++
 template <TRAITS_FUNCTION_C F,
           typename NewReturnTypeT>
@@ -655,13 +655,13 @@ using ReplaceReturnType_t;
 Type alias for "F" after replacing its return type with "NewReturnTypeT".
 </details>
 
-<a name="WhyChooseThisLibrary"></a>
+<a name="whychoosethislibrary"></a>
 ## Why choose this library
 In a nutshell, because it's extremely easy to use, with syntax that's consistently very clean (when relying on [Technique 2 of 2](#technique2of2) as most normally will), has a very small footprint (once you ignore the many comments in "TypeTraits.h"), and it may be the most complete function traits library available on the web at this writing (based on my attempt to find an equivalent library with calling convention support in particular). It's also significantly smaller than the Boost version ("boost::callable_traits"), which consists of a bloated number of files and at least twice the amount of code (largely due to a needlessly complex design, no disrespect intended). "FunctionTraits" still provides the same features for all intents and purposes however (and a few extra), as well as support for (mainstream) calling conventions as emphasized, which only has limited support in "boost::callable_traits" (but again, it's not enabled by default and the author's own internal comments about it are negative and discourage its use). Note that even when activated, calling convention support in "boost::callable_traits" isn't designed to work in 64 bit builds (it won't compile), while "FunctionTraits" does support it. Note that "boost::callable_traits" does support the experimental "transaction_safe" keyword however (unrelated to calling conventions), but "FunctionTraits" doesn't by design. Since this keyword isn't in the official C++ standard (most have never likely heard of it), and it's questionable if it ever will be (it was first floated in 2015), I've deferred its inclusion until it's actually implemented, if ever. Very few users will be impacted by its absence and including it in "FunctionTraits" can likely be done in less than a day based on my review of the situation.
 
 The upshot is that "FunctionTraits" is generally more complete than other similar libraries I've seen, in particular due to its (mainstream) calling convention support (noting that very few other libraries even exist that can be considered "complete"). Very little could be added at this stage that would benefit most users and would usually require improvements to the C++ standard itself to accommodate. However, even wider support for calling conventions may be added later, to target less frequently used calling conventions that are platform specific (if there's a demand for it). For now its mainstream calling convention support will usually meet the needs of most users.
 
-<a name="DesignConsiderations"></a>
+<a name="designconsiderations"></a>
 ## "FunctionTraits" design considerations (for those who care - not required reading)
 Note that "FunctionTraits" is not a canonical C++ "traits" class that would likely be considered for inclusion in the C++ standard itself. While it could be with some fairly easy-to-implement changes and (rarely-used) additions (read on), it wasn't designed for this. It was designed for practical, real-world use instead. For instance, it supports most mainstream calling conventions as emphasized earlier which isn't currently addressed in the C++ standard itself. Also note that template arg "F" of "FunctionTraits" and its helper templates isn't confined to pure C++ function types. As described earlier in this document, you can also pass pointers to functions, references to functions, references to pointers to functions, and functors (in all cases referring to their actual C++ types, not any actual instances). Note that references to non-static member function pointers aren't supported however because they're not supported by C++ itself.
 
