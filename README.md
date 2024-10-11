@@ -737,20 +737,6 @@ inline constexpr bool ArgTypeMatches_v;
 <ins>IMPORTANT</ins>:<br /> Note that this template targets non-variadic arguments only. If either function is a variadic function, i.e., [IsVariadic_v](#isvariadic_v) returns true, then the template completely ignores this (the function's variadic arguments are not compared). Caution advised.
 </blockquote></details>
 
-<a name="ArgTypesMatch_v"></a><details><summary>ArgTypesMatch_v</summary>
-
-<blockquote>
-
-```C++
-template <TRAITS_FUNCTION_C F1, TRAITS_FUNCTION_C F2>
-inline constexpr bool ArgTypesMatch_v;
-```
-
-"*bool*" variable set to "*true*" if the arg types of function "*F1*" match the arg types of function "*F2*" or false otherwise. This function is equivalent to calling [std::is_same_v](https://en.cppreference.com/w/cpp/types/is_same) for each corresponding function type in both functions, returning true if all of them match or false otherwise. If the number of arguments aren't the same in both functions however, then "*false*" is guaranteed to be returned.
-
-<ins>IMPORTANT</ins>:<br /> Note that this template targets non-variadic arguments only. If either function is a variadic function, i.e., [IsVariadic_v](#isvariadic_v) returns true, then the template completely ignores this (the function's variadic arguments are not processed). Caution advised.
-</blockquote></details>
-
 <a name="ArgTypeName_v"></a><details><summary>ArgTypeName_v</summary>
 
 <blockquote>
@@ -775,6 +761,20 @@ using ArgTypes_t;
 ```
 
 Type alias for a [std::tuple](https://en.cppreference.com/w/cpp/utility/tuple) representing all non-variadic argument types in "*F*". Rarely required in practice however since you'll usually rely on [ArgType_t](#argtype_t) or [ArgTypeName_v](#argtypename_v) to retrieve the type of a specific argument (see these above). If you require the [std::tuple](https://en.cppreference.com/w/cpp/utility/tuple) that stores all (non-variadic) argument types, then it's typically (usually) because you want to iterate all of them (say, to process the type of every argument in a loop). If you require this, then you can use the [ForEachArg](#foreacharg) helper function (template) further below. See this for details.
+</blockquote></details>
+
+<a name="ArgTypesMatch_v"></a><details><summary>ArgTypesMatch_v</summary>
+
+<blockquote>
+
+```C++
+template <TRAITS_FUNCTION_C F1, TRAITS_FUNCTION_C F2>
+inline constexpr bool ArgTypesMatch_v;
+```
+
+"*bool*" variable set to "*true*" if the arg types of function "*F1*" match the arg types of function "*F2*" or false otherwise. This function is equivalent to calling [std::is_same_v](https://en.cppreference.com/w/cpp/types/is_same) for each corresponding function type in both functions, returning true if all of them match or false otherwise. If the number of arguments aren't the same in both functions however, then "*false*" is guaranteed to be returned.
+
+<ins>IMPORTANT</ins>:<br /> Note that this template targets non-variadic arguments only. If either function is a variadic function, i.e., [IsVariadic_v](#isvariadic_v) returns true, then the template completely ignores this (the function's variadic arguments are not processed). Caution advised.
 </blockquote></details>
 
 <a name="CallingConvention_v"></a><details><summary>CallingConvention_v</summary>
