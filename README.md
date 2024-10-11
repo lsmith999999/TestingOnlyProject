@@ -1095,18 +1095,6 @@ using ReturnType_t;
 Type alias for the return type of function "*F*".
 </blockquote></details>
 
-<a name="ReturnTypesMatch_v"></a><details><summary>ReturnTypesMatch_v</summary>
-
-<blockquote>
-
-```C++
-template <TRAITS_FUNCTION_C F1, TRAITS_FUNCTION_C F2>
-inline constexpr bool ReturnTypesMatch_v;
-```
-
-"*bool*" variable set to "*true*" if the return type of function "*F1*" matches the return type of function "*F2*" or false otherwise.
-</blockquote></details>
-
 <a name="ReturnTypeName_v"></a><details><summary>ReturnTypeName_v</summary>
 
 <blockquote>
@@ -1117,6 +1105,18 @@ inline constexpr tstring_view ReturnTypeName_v;
 ```
 
 Same as [ReturnType_t](#returntype_t) just above but returns this as a (WYSIWYG) string (of type "*tstring_view*" - see [TypeName_v](#typename_v) for details). A *float* would therefore be (literally) returned as "*float*" for instance (quotes not included).
+</blockquote></details>
+
+<a name="ReturnTypesMatch_v"></a><details><summary>ReturnTypesMatch_v</summary>
+
+<blockquote>
+
+```C++
+template <TRAITS_FUNCTION_C F1, TRAITS_FUNCTION_C F2>
+inline constexpr bool ReturnTypesMatch_v;
+```
+
+"*bool*" variable set to "*true*" if the return type of function "*F1*" matches the return type of function "*F2*" or false otherwise.
 </blockquote></details>
 
 ---
