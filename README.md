@@ -723,23 +723,6 @@ using ArgType_t;
 Type alias for the type of the "*I*th" arg in function "*F*", where "*I*" is in the range 0 to the number of (non-variadic) arguments in "*F*" minus 1 (see [ArgCount_v](#argcount_v) just above). Pass "*I*" as the (zero-based) 2nd template arg. Note that if "*I*" is greater than or equal to the number of args in "*F*" (again, see [ArgCount_v](#argcount_v) just above), then a "*static_assert*" will trigger if "*AssertIfInvalidIndex*" is true (the default), or "*void*" will be returned otherwise (note that "*void*" function arg types are invalid in C++ so if returned then it's guaranteed that "*I*" isn't valid). Note that if "*F*" has no non-variadic args whatsoever then all values of "*I*" are invalid even if passing zero (so it's always guaranteed that either a "*static_assert*" will trigger or "*void*" will be returned, as controlled by "*AssertIfInvalidIndex*"). Note that passing false for the "*AssertIfInvalidIndex*" arg is often useful in [SFINAE](https://en.cppreference.com/w/cpp/language/sfinae) situations, where you don't want a "*static_assert*" to trigger when "*I*" is illegal, but for template substitution to simply fail instead. For instance, when using the [DECLARE_CLASS_HAS_NON_OVERLOADED_FUNCTION_TRAITS](#declare_class_has_non_overloaded_function_traits) macro (see macro for details), if the "*HasFunctionTraitsT*" arg you pass to the templates created by this macro needs to call [IsArgTypeSame_v](#isargtypesame_v), which ultimately relies on "*ArgType_t*", you'll normally want to pass false for the "*AssertIfInvalidIndex*" arg of [IsArgTypeSame_v](#isargtypesame_v) (which just forwards it along to "*ArgType_t*"). Otherwise the call to "*HasFunctionTraitsT::operator()*" might trigger a "*static_assert*" instead of just returning false (again, see [DECLARE_CLASS_HAS_NON_OVERLOADED_FUNCTION_TRAITS](#declare_class_has_non_overloaded_function_traits) for details).
 </blockquote></details>
 
-<a name="ArgTypeName_v"></a><details><summary>ArgTypeName_v</summary>
-
-<blockquote>
-
-```C++
-template <TRAITS_FUNCTION_C F,
-          std::size_t I,
-          bool AssertIfInvalidIndex = true>
-inline constexpr tstring_view ArgTypeName_v;
-```
-
-Same as [ArgType_t](#argtype_t) just above but returns this as a (WYSIWYG) string (of type "*tstring_view*" - see [TypeName_v](#typename_v) for details). A *float* would therefore be (literally) returned as "*float*" for instance (quotes not included). Note that if "*I*" is greater than or equal to the number of args in "*F*", then a "*static_assert*" will trigger if "*AssertIfInvalidIndex*" is true (the default), or "*void*" will be returned otherwise. See this arg in [ArgType_t](#argtype_t) for further details.
-</blockquote></details>
-
-<a name="ReadTraits"></a>
-### _Read traits_
-
 <a name="ArgTypeMatches_v"></a><details><summary>ArgTypeMatches_v</summary>
 
 <blockquote>
@@ -766,6 +749,20 @@ inline constexpr bool ArgTypesMatch_v;
 "*bool*" variable set to "*true*" if the arg types of function "*F1*" match the arg types of function "*F2*" or false otherwise. This function is equivalent to calling [std::is_same_v](https://en.cppreference.com/w/cpp/types/is_same) for each corresponding function type in both functions, returning true if all of them match or false otherwise. If the number of arguments aren't the same in both functions however, then "*false*" is guaranteed to be returned.
 
 <ins>IMPORTANT</ins>:<br /> Note that this template targets non-variadic arguments only. If either function is a variadic function, i.e., [IsVariadic_v](#isvariadic_v) returns true, then the template completely ignores this (the function's variadic arguments are not processed). Caution advised.
+</blockquote></details>
+
+<a name="ArgTypeName_v"></a><details><summary>ArgTypeName_v</summary>
+
+<blockquote>
+
+```C++
+template <TRAITS_FUNCTION_C F,
+          std::size_t I,
+          bool AssertIfInvalidIndex = true>
+inline constexpr tstring_view ArgTypeName_v;
+```
+
+Same as [ArgType_t](#argtype_t) just above but returns this as a (WYSIWYG) string (of type "*tstring_view*" - see [TypeName_v](#typename_v) for details). A *float* would therefore be (literally) returned as "*float*" for instance (quotes not included). Note that if "*I*" is greater than or equal to the number of args in "*F*", then a "*static_assert*" will trigger if "*AssertIfInvalidIndex*" is true (the default), or "*void*" will be returned otherwise. See this arg in [ArgType_t](#argtype_t) for further details.
 </blockquote></details>
 
 <a name="ArgTypes_t"></a><details><summary>ArgTypes_t</summary>
