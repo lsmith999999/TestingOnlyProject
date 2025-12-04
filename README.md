@@ -3326,7 +3326,7 @@ The upshot is that "*FunctionTraits*" is more complete and robust than all other
 
     Note that GCC compatible compilers are also supported based on the presence of the #defined macro \_\_GNUC\_\_
 
-[^2]: <a name="Footnote2Link"></a>***Microsoft Visual C++ minimum required version:***
+<a name="Footnote2Link"></a>[^2]: ***Microsoft Visual C++ minimum required version:***
     1. Non-module (*\*.h*) version of FunctionTraits: Microsoft Visual C++ V19.16 or later for [Read traits](#readtraits) (normally installed with Visual Studio 2017 V15.9 or later), or V19.20 or later for [Write traits](#writetraits) (normally installed with Visual Studio 2019 or later). Note that [Write traits](#writetraits) are unavailable in Visual Studio 2017 releases of VC++ due to compiler bugs in those versions.
     2. Module (*\*.cppm*) version of FunctionTraits (see [Module support in C++20 or later](#moduleusage)): Microsoft Visual C++ V16.8 or later (see [here](https://devblogs.microsoft.com/cppblog/standard-c20-modules-support-with-msvc-in-visual-studio-2019-version-16-8/), normally installed with Visual Studio 2019 V19.28 or later). Note that if using "*CMake*" then it has its own requirements (toolset 14.34 or later provided with Visual Studio 2022 V17.4 or later - see [here](https://cmake.org/cmake/help/latest/manual/cmake-cxxmodules.7.html#compiler-support)).
 
