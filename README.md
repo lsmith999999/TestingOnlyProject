@@ -3326,9 +3326,8 @@ The upshot is that "*FunctionTraits*" is more complete and robust than all other
 
     Note that GCC compatible compilers are also supported based on the presence of the #defined macro \_\_GNUC\_\_
 
-[^2]: ***Microsoft Visual C++ minimum required version:***
+[^2]: <a name="Footnote2Link"></a>***Microsoft Visual C++ minimum required version:***
     1. Non-module (*\*.h*) version of FunctionTraits: Microsoft Visual C++ V19.16 or later for [Read traits](#readtraits) (normally installed with Visual Studio 2017 V15.9 or later), or V19.20 or later for [Write traits](#writetraits) (normally installed with Visual Studio 2019 or later). Note that [Write traits](#writetraits) are unavailable in Visual Studio 2017 releases of VC++ due to compiler bugs in those versions.
-    <a name="Footnote2Link"></a>
     2. Module (*\*.cppm*) version of FunctionTraits (see [Module support in C++20 or later](#moduleusage)): Microsoft Visual C++ V16.8 or later (see [here](https://devblogs.microsoft.com/cppblog/standard-c20-modules-support-with-msvc-in-visual-studio-2019-version-16-8/), normally installed with Visual Studio 2019 V19.28 or later). Note that if using "*CMake*" then it has its own requirements (toolset 14.34 or later provided with Visual Studio 2022 V17.4 or later - see [here](https://cmake.org/cmake/help/latest/manual/cmake-cxxmodules.7.html#compiler-support)).
 
     Note that [import std](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2465r3.pdf) in C++23 is supported by MSVC V19.35 or later (normally installed with Visual Studio 2022 V17.5 or later - search for "*17.5*" [here](https://learn.microsoft.com/en-us/cpp/cpp/modules-cpp?view=msvc-170#enable-modules-in-the-microsoft-c-compiler)), or V17.6 in Visual Studio 2022 itself (opposed to when using MSVC directly - see [Build ISO C++23 Standard Library Modules](https://learn.microsoft.com/en-us/cpp/build/reference/c-cpp-prop-page?view=msvc-170#build-iso-c23-standard-library-modules)). The transitional *STDEXT\_IMPORT\_STD\_EXPERIMENTAL* macro described in [Module support in C++20 or later](#moduleusage) is therefore ignored in earlier versions (prior to V17.5).
