@@ -1,2 +1,2 @@
 # Test
-(Test file link)[README_LINKTEST.md]
+[Test file link](README_LINKTEST.md)
